@@ -107,6 +107,6 @@ case "play":
    
 }})
 
-//bot.login('NDI4NDQ5MjA1NTgxNzc0ODQ4.Dew1IQ.PJ9wLATHP7vt1QYMzTE3iulidrk');
+//bot.login('no');
 
-bot.login('NDMwOTgzMTI1NzQxMzM4NjI0.DaYKBQ.3tAqcxu0Ypn6d8eA_aIxqE7OFzY');
+bot.login('no');
