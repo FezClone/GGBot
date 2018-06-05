@@ -85,7 +85,7 @@ bot.on("message", function (message) {
                 message.channel.stopTyping();
                 return;
             }
-            const client = new GoogleImages("004681639483127549168:-nntqa3rlyc", "AIzaSyB_aIvCpenESSRKDXZ3HpKTv6-Tqtt5xTo");
+            const client = new GoogleImages("cseid", "youtubeapi keys");
             args.shift();
             var searchTerm = args.join(" ");
 
