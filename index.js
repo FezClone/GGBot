@@ -136,68 +136,68 @@ bot.on("message", function (message) {
       {
         "name": "Quick Play Stats (1)",
         "value": 
-        "all_damage_done_avg_per_10_min: "+data.quickplay.global.all_damage_done_avg_per_10_min + "\n"+
-        "masteringHeroe: "+data.quickplay.global.masteringHeroe + "\n"+
-        "multikills: "+data.quickplay.global.multikills + "\n"+
-        "barrier_damage_done: "+data.quickplay.global.barrier_damage_done + "\n"+
-        "melee_final_blows: "+data.quickplay.global.melee_final_blows + "\n"+
-        "deaths: "+data.quickplay.global.deaths + "\n"+
-        "hero_damage_done: "+data.quickplay.global.hero_damage_done + "\n"+
-        "time_spent_on_fire: "+data.quickplay.global.time_spent_on_fire + "\n"+
-        "solo_kills: "+data.quickplay.global.solo_kills+ "\n"+
-        "objective_time: "+data.quickplay.global.objective_time + "\n"+
-        "objective_kills: "+data.quickplay.global.objective_kills + "\n"+
-        "final_blows: "+data.quickplay.global.final_blows + "\n"+
-        "eliminations: "+data.quickplay.global.eliminations + "\n"+
-        "all_damage_done: "+data.quickplay.global.all_damage_done+ "\n"+
-        "environmental_kills: "+data.quickplay.global.environmental_kills + "\n"+
-        "defensive_assists: "+data.quickplay.global.defensive_assists + "\n"+
-        "recon_assists: "+data.quickplay.global.recon_assists + "\n"+
-        "offensive_assists: "+data.quickplay.global.offensive_assists + "\n"+
-        "healing_done: "+data.quickplay.global.healing_done + "\n"+
-        "teleporter_pads_destroyed: "+data.quickplay.global.teleporter_pads_destroyed + "\n"+
-        "eliminations_most_in_game: "+data.quickplay.global.eliminations_most_in_game + "\n"+
-        "final_blows_most_in_game: "+data.quickplay.global.final_blows_most_in_game + "\n"+
-        "all_damage_done_most_in_game: "+data.quickplay.global.all_damage_done_most_in_game + "\n"+
-        "healing_done_most_in_game: "+data.quickplay.global.healing_done_most_in_game + "\n"+
-        "defensive_assists_most_in_game: "+data.quickplay.global.defensive_assists_most_in_game + "\n"+
-        "offensive_assists_most_in_game: "+data.quickplay.global.offensive_assists_most_in_game + "\n"+
-        "objective_kills_most_in_game: "+data.quickplay.global.objective_kills_most_in_game + "\n"+
-        "objective_time_most_in_game: "+data.quickplay.global. objective_time_most_in_game + "\n"+
-        "multikill_best "+data.quickplay.global.multikill_best + "\n"+
-        "solo_kills_most_in_game: "+data.quickplay.global.solo_kills_most_in_game + "\n"+
-        "time_spent_on_fire_most_in_game: "+data.quickplay.global.time_spent_on_fire_most_in_game + "\n"+
-        "melee_final_blows_most_in_game: "+data.quickplay.global.melee_final_blows_most_in_game + "\n"},
+        "Average of damge done per 10mins: "+data.quickplay.global.all_damage_done_avg_per_10_min + "\n"+
+        "Main hero: "+data.quickplay.global.masteringHeroe + "\n"+
+        "MultiKills: "+data.quickplay.global.multikills + "\n"+
+        "Barrier damge done: "+data.quickplay.global.barrier_damage_done + "\n"+
+        "Final blows (melee): "+data.quickplay.global.melee_final_blows + "\n"+
+        "Deaths: "+data.quickplay.global.deaths + "\n"+
+        "Hero damage done: "+data.quickplay.global.hero_damage_done + "\n"+
+        "Amount of time spent on fire: "+data.quickplay.global.time_spent_on_fire + "\n"+
+        "Solo kills: "+data.quickplay.global.solo_kills+ "\n"+
+        "Objective time: "+data.quickplay.global.objective_time + "\n"+
+        "Objective time: "+data.quickplay.global.objective_kills + "\n"+
+        "Finals blows: "+data.quickplay.global.final_blows + "\n"+
+        "Eliminations: "+data.quickplay.global.eliminations + "\n"+
+        "All damage done: "+data.quickplay.global.all_damage_done+ "\n"+
+        "Enviromental kills: "+data.quickplay.global.environmental_kills + "\n"+
+        "Defensive assists: "+data.quickplay.global.defensive_assists + "\n"+
+        "Recon assists: "+data.quickplay.global.recon_assists + "\n"+
+        "Offensive assists: "+data.quickplay.global.offensive_assists + "\n"+
+        "Amount of healing done: "+data.quickplay.global.healing_done + "\n"+
+        "Amount of teleporter pads destroyed: "+data.quickplay.global.teleporter_pads_destroyed + "\n"+
+        "Most eliminations in one game: "+data.quickplay.global.eliminations_most_in_game + "\n"+
+        "Most final blows in one game: "+data.quickplay.global.final_blows_most_in_game + "\n"+
+        "Most damge done ins one game: "+data.quickplay.global.all_damage_done_most_in_game + "\n"+
+        "Most healing done in one game: "+data.quickplay.global.healing_done_most_in_game + "\n"+
+        "Most defensive assists in one game: "+data.quickplay.global.defensive_assists_most_in_game + "\n"+
+        "Most offensive assists in one game: " + data.quickplay.global.offensive_assists_most_in_game + "\n" +
+        "Most objective kills in one game: "+data.quickplay.global.objective_kills_most_in_game + "\n"+
+        "Most objective time in one game: "+data.quickplay.global. objective_time_most_in_game + "\n"+
+        "Multikill Best: "+data.quickplay.global.multikill_best + "\n"+
+        "Most solo kills in one game: "+data.quickplay.global.solo_kills_most_in_game + "\n"+
+        "Most time spent on fire in one game: "+data.quickplay.global.time_spent_on_fire_most_in_game + "\n"+
+        "Most final blows (melee) in one game: "+data.quickplay.global.melee_final_blows_most_in_game + "\n"},
        {"name": "Quick Play (2)",
         "value": 
-        "shield_generator_destroyed_most_in_game: "+data.quickplay.global.shield_generator_destroyed_most_in_game + "\n"+
-        "turrets_destroyed_most_in_game: "+data.quickplay.global.turrets_destroyed_most_in_game + "\n"+
-        "environmental_kills_most_in_game: "+data.quickplay.global.environmental_kills_most_in_game + "\n"+
-        "teleporter_pad_destroyed_most_in_game: "+data.quickplay.global.teleporter_pad_destroyed_most_in_game + "\n"+
-        "kill_streak_best: "+data.quickplay.global.kill_streak_best + "\n"+
-        "hero_damage_done_most_in_game: "+data.quickplay.global.hero_damage_done_most_in_game + "\n"+
-        "barrier_damage_done_most_in_game: "+data.quickplay.global.barrier_damage_done_most_in_game + "\n"+
-        "recon_assists_most_in_game: "+data.quickplay.global.recon_assists_most_in_game + "\n"+
-        "barrier_damage_done_avg_per_10_min: "+data.quickplay.global.barrier_damage_done_avg_per_10_min + "\n"+
-        "deaths_avg_per_10_min: "+data.quickplay.global.deaths_avg_per_10_min + "\n"+
-        "hero_damage_done_avg_per_10_min: "+data.quickplay.global.hero_damage_done_avg_per_10_min + "\n"+
-        "time_spent_on_fire_avg_per_10_min: "+data.quickplay.global.time_spent_on_fire_avg_per_10_min + "\n"+
-        "solo_kills_avg_per_10_min: "+data.quickplay.global.solo_kills_avg_per_10_min+ "\n"+
-        "objective_time_avg_per_10_min: "+data.quickplay.global.objective_time_avg_per_10_min + "\n"+
-        "objective_kills_avg_per_10_min: "+data.quickplay.global.objective_kills_avg_per_10_min + "\n"+
-        "healing_done_avg_per_10_min: "+data.quickplay.global.healing_done_avg_per_10_min + "\n"+
-        "final_blows_avg_per_10_min: "+data.quickplay.global.final_blows_avg_per_10_min + "\n"+
-        "eliminations_avg_per_10_min: "+data.quickplay.global.eliminations_avg_per_10_min + "\n"+
-         "cards: "+data.quickplay.global.cards + "\n"+
-        "medals: "+data.quickplay.global.medals + "\n"+
-         "medals_gold: "+data.quickplay.global.medals_gold + "\n"+
-        "medals_silver: "+data.quickplay.global.medals_silver + "\n"+
-         "medals_bronze: "+data.quickplay.global.medals_bronze + "\n"+
-        "time_played: "+data.quickplay.global.time_played + "\n"+
-         "games_won: "+data.quickplay.global.games_won + "\n"+
-         "shield_generators_destroyed: "+data.quickplay.global.shield_generators_destroyed + "\n"+
-         "damage_done: "+data.quickplay.global.damage_done + "\n"+
-         "turrets_destroyed: "+data.quickplay.global.turrets_destroyed + "\n"
+        "Most shield generators destroyed in one game: "+data.quickplay.global.shield_generator_destroyed_most_in_game + "\n"+
+        "Most turrets destroyed in one game: "+data.quickplay.global.turrets_destroyed_most_in_game + "\n"+
+        "Most enviromental kills in one game: "+data.quickplay.global.environmental_kills_most_in_game + "\n"+
+        "Most teleporter pads destroyed in one game: "+data.quickplay.global.teleporter_pad_destroyed_most_in_game + "\n"+
+        "Best kill streak: "+data.quickplay.global.kill_streak_best + "\n"+
+        "Most hero damge done in one game: "+data.quickplay.global.hero_damage_done_most_in_game + "\n"+
+        "Most barrier damage done in one game: "+data.quickplay.global.barrier_damage_done_most_in_game + "\n"+
+        "Most recon assists done in one game: "+data.quickplay.global.recon_assists_most_in_game + "\n"+
+        "Barrier damage done per 10mins: "+data.quickplay.global.barrier_damage_done_avg_per_10_min + "\n"+
+        "Deaths per 10 mins: "+data.quickplay.global.deaths_avg_per_10_min + "\n"+
+        "Hero damage done per 10mins: "+data.quickplay.global.hero_damage_done_avg_per_10_min + "\n"+
+        "Time spent on fire per 10mins: "+data.quickplay.global.time_spent_on_fire_avg_per_10_min + "\n"+
+        "Solo kills average per 10mins: "+data.quickplay.global.solo_kills_avg_per_10_min+ "\n"+
+        "Objective time per 10mins: "+data.quickplay.global.objective_time_avg_per_10_min + "\n"+
+        "Objective kills per 10mins: "+data.quickplay.global.objective_kills_avg_per_10_min + "\n"+
+        "Healing done per 10mins: "+data.quickplay.global.healing_done_avg_per_10_min + "\n"+
+        "Final blows done per 10mins: "+data.quickplay.global.final_blows_avg_per_10_min + "\n"+
+        "Eliminations done per 10mins: "+data.quickplay.global.eliminations_avg_per_10_min + "\n"+
+         "Cards: "+data.quickplay.global.cards + "\n"+
+        "Medals: "+data.quickplay.global.medals + "\n"+
+         "Gold Medals: "+data.quickplay.global.medals_gold + "\n"+
+        "Silver Medals: "+data.quickplay.global.medals_silver + "\n"+
+         "Bronze Medals: "+data.quickplay.global.medals_bronze + "\n"+
+        "Amount of time played in QP: "+data.quickplay.global.time_played + "\n"+
+         "Games Won: "+data.quickplay.global.games_won + "\n"+
+         "Amount of shield generators destroyed: "+data.quickplay.global.shield_generators_destroyed + "\n"+
+         "Amount of damage Done: "+data.quickplay.global.damage_done + "\n"+
+         "Amount of turrets destroyed: "+data.quickplay.global.turrets_destroyed + "\n"
         }
     ]
   }
