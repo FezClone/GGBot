@@ -139,7 +139,7 @@ bot.on("message", function (message) {
         "Average of damge done per 10mins: "+data.quickplay.global.all_damage_done_avg_per_10_min + "\n"+
         "Main hero: "+data.quickplay.global.masteringHeroe + "\n"+
         "MultiKills: "+data.quickplay.global.multikills + "\n"+
-        "Barrier damge done: "+data.quickplay.global.barrier_damage_done + "\n"+
+        "Amount of barrier damge done: "+data.quickplay.global.barrier_damage_done + "\n"+
         "Final blows (melee): "+data.quickplay.global.melee_final_blows + "\n"+
         "Deaths: "+data.quickplay.global.deaths + "\n"+
         "Hero damage done: "+data.quickplay.global.hero_damage_done + "\n"+
@@ -237,58 +237,58 @@ break;
       {
         "name": "Competitive Stats (1)",
         "value": 
-        "all_damage_done_avg_per_10_min: "+data.competitive.global.all_damage_done_avg_per_10_min + "\n"+
-        "masteringHeroe: "+data.competitive.global.masteringHeroe + "\n"+
-        "barrier_damage_done: "+data.competitive.global.barrier_damage_done+ "\n"+
-        "melee_final_blows "+data.competitive.global.melee_final_blows + "\n"+
-        "deaths: "+data.competitive.global.deaths + "\n"+
-        "hero_damage_done: "+data.competitive.global.hero_damage_done + "\n"+
-        "time_spent_on_fire: "+data.competitive.global.time_spent_on_fire + "\n"+
-        "solo_kills: "+data.competitive.global.solo_kills + "\n"+
-        "objective_time: "+data.competitive.global.objective_time + "\n"+
-        "objective_kills: "+data.competitive.global.objective_kills + "\n"+
-        "final_blows: "+data.competitive.global.final_blows + "\n"+
-        "eliminations: "+data.competitive.global.eliminations + "\n"+
-        "all_damage_done: "+data.competitive.global.all_damage_done + "\n"+
-        "multikills: "+data.competitive.global.multikills + "\n"+
-        "healing_done: "+data.competitive.global.healing_done + "\n"+
-        "defensive_assists: "+data.competitive.global.defensive_assists + "\n"+
-        "eliminations_most_in_game: "+data.competitive.global.eliminations_most_in_game + "\n"+
-        "final_blows_most_in_game: "+data.competitive.global.final_blows_most_in_game + "\n"+
-        "all_damage_done_most_in_game: "+data.competitive.global.all_damage_done_most_in_game + "\n"+
-        "healing_done_most_in_game: "+data.competitive.global.healing_done_most_in_game+ "\n"+
-        "defensive_assists_most_in_game: "+data.competitive.global.defensive_assists_most_in_game + "\n"+
-        "objective_kills_most_in_game: "+data.competitive.global.objective_kills_most_in_game + "\n"+
-        "objective_time_most_in_game: "+data.competitive.global.objective_time_most_in_game + "\n"+
-        "multikill_best: "+data.competitive.global.multikill_best+ "\n"+
-        "solo_kills_most_in_game: "+data.competitive.global.solo_kills_most_in_game + "\n"+
-        "time_spent_on_fire_most_in_game: "+data.competitive.global.time_spent_on_fire_most_in_game + "\n"+
-        "melee_final_blows_most_in_game: "+data.competitive.global.melee_final_blows_most_in_game + "\n"},
+        "Average of damge done per 10mins: " + data.competitive.global.all_damage_done_avg_per_10_min + "\n" +
+        "Main hero: "+data.competitive.global.masteringHeroe + "\n"+
+        "Amount of barrier damge done: " +data.competitive.global.barrier_damage_done+ "\n"+
+        "Final blows (melee): " + data.competitive.global.melee_final_blows + "\n" +
+        "Deaths: "+data.competitive.global.deaths + "\n"+
+        "Hero damage done: "+data.competitive.global.hero_damage_done + "\n"+
+        "Amount of time spent on fire: "+data.competitive.global.time_spent_on_fire + "\n"+
+        "Amount of solo kills: "+data.competitive.global.solo_kills + "\n"+
+        "Objective time: "+data.competitive.global.objective_time + "\n"+
+        "Objective kills: "+data.competitive.global.objective_kills + "\n"+
+        "Amount of final blows: "+data.competitive.global.final_blows + "\n"+
+        "Amount of eliminations: "+data.competitive.global.eliminations + "\n"+
+        "All damage done: "+data.competitive.global.all_damage_done + "\n"+
+        "MultiKills: "+data.competitive.global.multikills + "\n"+
+        "Amount of healing: "+data.competitive.global.healing_done + "\n"+
+        "Amount of defensive assists: "+data.competitive.global.defensive_assists + "\n"+
+        "Most eliminations in one game: "+data.competitive.global.eliminations_most_in_game + "\n"+
+        "Most final blows in one game: "+data.competitive.global.final_blows_most_in_game + "\n"+
+        "Most damage done in one game: "+data.competitive.global.all_damage_done_most_in_game + "\n"+
+        "Most healing done in one game: "+data.competitive.global.healing_done_most_in_game+ "\n"+
+        "Most defensive assists in one game: "+data.competitive.global.defensive_assists_most_in_game + "\n"+
+        "Most Objective kills in one game: "+data.competitive.global.objective_kills_most_in_game + "\n"+
+        "Most objective time in one game: "+data.competitive.global.objective_time_most_in_game + "\n"+
+        "Best multikill: "+data.competitive.global.multikill_best+ "\n"+
+        "Most solo kills in one game: "+data.competitive.global.solo_kills_most_in_game + "\n"+
+        "Most time spent on fire in one game: "+data.competitive.global.time_spent_on_fire_most_in_game + "\n"+
+        "Most final blows (melee) in one game: "+data.competitive.global.melee_final_blows_most_in_game + "\n"},
       {"name": "Competitive Stats (2)",
         "value": 
-        "kill_streak_best: "+data.competitive.global.kill_streak_best + "\n"+
-        "hero_damage_done_most_in_game: "+data.competitive.global.hero_damage_done_most_in_game + "\n"+
-         " barrier_damage_done_most_in_game: "+data.competitive.global.barrier_damage_done_most_in_game + "\n"+
-        "barrier_damage_done_avg_per_10_min: "+data.competitive.global.barrier_damage_done_avg_per_10_min + "\n"+
-         "deaths_avg_per_10_min: "+data.competitive.global.deaths_avg_per_10_min + "\n"+
-        "hero_damage_done_avg_per_10_min: "+data.competitive.global.hero_damage_done_avg_per_10_min + "\n"+
-         "time_spent_on_fire_avg_per_10_min: "+data.competitive.global.time_spent_on_fire_avg_per_10_min + "\n"+
-        "solo_kills_avg_per_10_min: "+data.competitive.global.solo_kills_avg_per_10_min + "\n"+
-         "objective_time_avg_per_10_min: "+data.competitive.global.objective_time_avg_per_10_min + "\n"+
-        "objective_kills_avg_per_10_min: "+data.competitive.global.objective_kills_avg_per_10_min + "\n"+
-        "healing_done_avg_per_10_min: "+data.competitive.global.healing_done_avg_per_10_min + "\n"+
-        "final_blows_avg_per_10_min: "+data.competitive.global.final_blows_avg_per_10_min + "\n"+
-        "eliminations_avg_per_10_min: "+data.competitive.global.eliminations_avg_per_10_min + "\n"+
-        "card: "+data.competitive.global.card + "\n"+
-        "medals: "+data.competitive.global.medals + "\n"+
-        "medals_gold: "+data.competitive.global.medals_gold + "\n"+
-         "medals_silver: "+data.competitive.global.medals_silver + "\n"+
-        "medals_bronze: "+data.competitive.global.medals_bronze + "\n"+
-         "time_played: "+data.competitive.global.time_played + "\n"+
-        "games_played: "+data.competitive.global.games_played + "\n"+
-         "games_won: "+data.competitive.global.games_won + "\n"+
-        "games_lost: "+data.competitive.global.games_lost + "\n"+
-         "damage_done: "+data.competitive.global.damage_done + "\n"
+        "Best kill streak: "+data.competitive.global.kill_streak_best + "\n"+
+        "Most hero damage done in one game: "+data.competitive.global.hero_damage_done_most_in_game + "\n"+
+         "Most barrier damage done in one game: "+data.competitive.global.barrier_damage_done_most_in_game + "\n"+
+        "Barrier damge done per 10mins: "+data.competitive.global.barrier_damage_done_avg_per_10_min + "\n"+
+         "Deaths per 10mins: "+data.competitive.global.deaths_avg_per_10_min + "\n"+
+        "Hero damage done per 10mins: "+data.competitive.global.hero_damage_done_avg_per_10_min + "\n"+
+         "Time spent on fire per 10mins: "+data.competitive.global.time_spent_on_fire_avg_per_10_min + "\n"+
+        "Solo kills per 10mins: "+data.competitive.global.solo_kills_avg_per_10_min + "\n"+
+         "Objective time per 10mins: "+data.competitive.global.objective_time_avg_per_10_min + "\n"+
+        "Objective time per 10mins: "+data.competitive.global.objective_kills_avg_per_10_min + "\n"+
+        "Healing done per 10mins: "+data.competitive.global.healing_done_avg_per_10_min + "\n"+
+        "Final blows per 10mins: "+data.competitive.global.final_blows_avg_per_10_min + "\n"+
+        "Eliminations per 10mins: "+data.competitive.global.eliminations_avg_per_10_min + "\n"+
+        "Card: "+data.competitive.global.card + "\n"+
+        "Medals: "+data.competitive.global.medals + "\n"+
+        "Gold medals: "+data.competitive.global.medals_gold + "\n"+
+         "Silver medals: "+data.competitive.global.medals_silver + "\n"+
+        "Bronze medals: "+data.competitive.global.medals_bronze + "\n"+
+         "Amount of time played: "+data.competitive.global.time_played + "\n"+
+        "Amount of games played: "+data.competitive.global.games_played + "\n"+
+         "Games won: "+data.competitive.global.games_won + "\n"+
+        "Games lost: "+data.competitive.global.games_lost + "\n"+
+         "Amount of damage done: "+data.competitive.global.damage_done + "\n"
         
      
       }
