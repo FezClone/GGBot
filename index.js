@@ -1,3 +1,12 @@
+//Sets up thr uptimerobot keeper upper
+const express = require("express")
+const expressApp = express()
+expressApp.get("/", (req, res) => res.json("OK FAM"))
+expressApp.listen(process.env.PORT)
+
+
+
+
 console.log('GGBot is started.');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -6,15 +15,28 @@ const PREFIX = ("gg");
 const shortid = require('shortid');
 const GoogleImages = require('google-images');
 const fs = require("fs");
+const owjs = require('overwatch-js');
 
 
 bot.on("guildMemberAdd", member => {
-    console.log('User ' + member.user.username + ' has joined the server and been set to Level 1.')
+  
+  
+  
+  if(!member.user.bot){
+    console.log('User ' + member.user.username + ' has joined the server and been set to Level 1.');
 
-    var role = member.guild.roles.find('name', 'Level 1');
+    var level1Role = member.guild.roles.find('name', 'Level 1');
+  var djRole = member.guild.roles.find('name', 'DJ');
 
-    member.addRole(role)
-
+    member.addRole(level1Role);
+  member.addRole(djRole);
+  }
+if(member.user.bot){
+  console.log('The Bot ' + member.user.username + ' has joined the server and been set to a Bot.');
+  var botRole = member.guild.roles.find('name', 'Bot');
+  member.addRole(botRole);
+  
+}
 });
 
 bot.on("guildCreate", guild => {
@@ -41,6 +63,10 @@ bot.on("guildDelete", guild => {
     fs.unlinkSync(serverDataFile);
 });
 
+bot.on("ready",()=>{
+    bot.user.setActivity('GG help');
+});
+
 
 
 //bot.on("message", (message) => { 
@@ -56,12 +82,13 @@ var servers = {};
 function play(connection, message) {
     var server = servers[message.guild.id];
 
+
     server.dispatcher = connection.playStream(YTDL(server.queue[0], {
         filter: "audioonly"
     }));
 
     server.queue.shift();
-
+   
     server.dispatcher.on("end", function () {
         if (server.queue[0])
             setTimeout(() => play(connection, message), 200);
@@ -76,7 +103,251 @@ bot.on("message", function (message) {
     const args = message.content.slice(PREFIX.length).trim().split(/ +/g);
 
     switch (args[0].toLowerCase()) {
+      case "test":
 
+        break;
+         case "owqp":
+        var owUsername=args[1].replace('#','-');
+   
+        
+        
+        
+       
+        owjs.getOverall(args[3], args[2], owUsername).then(function(data){
+   
+          console.log(data);
+          message.channel.send({
+  "embed": {
+    "title": data.profile.nick,
+    "description": "Here is all your stats (Both QP and Comp):",
+    "url": data.profile.url,
+    "color": 13246671,
+    "thumbnail": {
+      "url": data.profile.avatar
+    },
+    
+    "author": {
+      "name": args[1],
+      "url": data.profile.url,
+      "icon_url": data.profile.avatar
+    },
+    "fields": [
+     
+      {
+        "name": "Quick Play Stats (1)",
+        "value": 
+        "all_damage_done_avg_per_10_min: "+data.quickplay.global.all_damage_done_avg_per_10_min + "\n"+
+        "masteringHeroe: "+data.quickplay.global.masteringHeroe + "\n"+
+        "multikills: "+data.quickplay.global.multikills + "\n"+
+        "barrier_damage_done: "+data.quickplay.global.barrier_damage_done + "\n"+
+        "melee_final_blows: "+data.quickplay.global.melee_final_blows + "\n"+
+        "deaths: "+data.quickplay.global.deaths + "\n"+
+        "hero_damage_done: "+data.quickplay.global.hero_damage_done + "\n"+
+        "time_spent_on_fire: "+data.quickplay.global.time_spent_on_fire + "\n"+
+        "solo_kills: "+data.quickplay.global.solo_kills+ "\n"+
+        "objective_time: "+data.quickplay.global.objective_time + "\n"+
+        "objective_kills: "+data.quickplay.global.objective_kills + "\n"+
+        "final_blows: "+data.quickplay.global.final_blows + "\n"+
+        "eliminations: "+data.quickplay.global.eliminations + "\n"+
+        "all_damage_done: "+data.quickplay.global.all_damage_done+ "\n"+
+        "environmental_kills: "+data.quickplay.global.environmental_kills + "\n"+
+        "defensive_assists: "+data.quickplay.global.defensive_assists + "\n"+
+        "recon_assists: "+data.quickplay.global.recon_assists + "\n"+
+        "offensive_assists: "+data.quickplay.global.offensive_assists + "\n"+
+        "healing_done: "+data.quickplay.global.healing_done + "\n"+
+        "teleporter_pads_destroyed: "+data.quickplay.global.teleporter_pads_destroyed + "\n"+
+        "eliminations_most_in_game: "+data.quickplay.global.eliminations_most_in_game + "\n"+
+        "final_blows_most_in_game: "+data.quickplay.global.final_blows_most_in_game + "\n"+
+        "all_damage_done_most_in_game: "+data.quickplay.global.all_damage_done_most_in_game + "\n"+
+        "healing_done_most_in_game: "+data.quickplay.global.healing_done_most_in_game + "\n"+
+        "defensive_assists_most_in_game: "+data.quickplay.global.defensive_assists_most_in_game + "\n"+
+        "offensive_assists_most_in_game: "+data.quickplay.global.offensive_assists_most_in_game + "\n"+
+        "objective_kills_most_in_game: "+data.quickplay.global.objective_kills_most_in_game + "\n"+
+        "objective_time_most_in_game: "+data.quickplay.global. objective_time_most_in_game + "\n"+
+        "multikill_best "+data.quickplay.global.multikill_best + "\n"+
+        "solo_kills_most_in_game: "+data.quickplay.global.solo_kills_most_in_game + "\n"+
+        "time_spent_on_fire_most_in_game: "+data.quickplay.global.time_spent_on_fire_most_in_game + "\n"+
+        "melee_final_blows_most_in_game: "+data.quickplay.global.melee_final_blows_most_in_game + "\n"},
+       {"name": "Quick Play (2)",
+        "value": 
+        "shield_generator_destroyed_most_in_game: "+data.quickplay.global.shield_generator_destroyed_most_in_game + "\n"+
+        "turrets_destroyed_most_in_game: "+data.quickplay.global.turrets_destroyed_most_in_game + "\n"+
+        "environmental_kills_most_in_game: "+data.quickplay.global.environmental_kills_most_in_game + "\n"+
+        "teleporter_pad_destroyed_most_in_game: "+data.quickplay.global.teleporter_pad_destroyed_most_in_game + "\n"+
+        "kill_streak_best: "+data.quickplay.global.kill_streak_best + "\n"+
+        "hero_damage_done_most_in_game: "+data.quickplay.global.hero_damage_done_most_in_game + "\n"+
+        "barrier_damage_done_most_in_game: "+data.quickplay.global.barrier_damage_done_most_in_game + "\n"+
+        "recon_assists_most_in_game: "+data.quickplay.global.recon_assists_most_in_game + "\n"+
+        "barrier_damage_done_avg_per_10_min: "+data.quickplay.global.barrier_damage_done_avg_per_10_min + "\n"+
+        "deaths_avg_per_10_min: "+data.quickplay.global.deaths_avg_per_10_min + "\n"+
+        "hero_damage_done_avg_per_10_min: "+data.quickplay.global.hero_damage_done_avg_per_10_min + "\n"+
+        "time_spent_on_fire_avg_per_10_min: "+data.quickplay.global.time_spent_on_fire_avg_per_10_min + "\n"+
+        "solo_kills_avg_per_10_min: "+data.quickplay.global.solo_kills_avg_per_10_min+ "\n"+
+        "objective_time_avg_per_10_min: "+data.quickplay.global.objective_time_avg_per_10_min + "\n"+
+        "objective_kills_avg_per_10_min: "+data.quickplay.global.objective_kills_avg_per_10_min + "\n"+
+        "healing_done_avg_per_10_min: "+data.quickplay.global.healing_done_avg_per_10_min + "\n"+
+        "final_blows_avg_per_10_min: "+data.quickplay.global.final_blows_avg_per_10_min + "\n"+
+        "eliminations_avg_per_10_min: "+data.quickplay.global.eliminations_avg_per_10_min + "\n"+
+         "cards: "+data.quickplay.global.cards + "\n"+
+        "medals: "+data.quickplay.global.medals + "\n"+
+         "medals_gold: "+data.quickplay.global.medals_gold + "\n"+
+        "medals_silver: "+data.quickplay.global.medals_silver + "\n"+
+         "medals_bronze: "+data.quickplay.global.medals_bronze + "\n"+
+        "time_played: "+data.quickplay.global.time_played + "\n"+
+         "games_won: "+data.quickplay.global.games_won + "\n"+
+         "shield_generators_destroyed: "+data.quickplay.global.shield_generators_destroyed + "\n"+
+         "damage_done: "+data.quickplay.global.damage_done + "\n"+
+         "turrets_destroyed: "+data.quickplay.global.turrets_destroyed + "\n"
+        }
+    ]
+  }
+});
+         
+        });      
+        
+break;
+        
+        
+         case "owcomp":
+        var owUsername=args[1].replace('#','-');
+   
+        
+        
+        
+       
+        owjs.getOverall(args[3], args[2], owUsername).then(function(data){
+   
+          console.log(data);
+          message.channel.send({
+  "embed": {
+    "title": data.profile.nick,
+    "description": "Here is all your stats (Comp):",
+    "url": data.profile.url,
+    "color": 13246671,
+    "thumbnail": {
+      "url": data.profile.avatar
+    },
+    
+    "author": {
+      "name": args[1],
+      "url": data.profile.url,
+      "icon_url": data.profile.avatar
+    },
+    "fields": [
+      {
+        "name": "Competitive Stats (1)",
+        "value": 
+        "all_damage_done_avg_per_10_min: "+data.competitive.global.all_damage_done_avg_per_10_min + "\n"+
+        "masteringHeroe: "+data.competitive.global.masteringHeroe + "\n"+
+        "barrier_damage_done: "+data.competitive.global.barrier_damage_done+ "\n"+
+        "melee_final_blows "+data.competitive.global.melee_final_blows + "\n"+
+        "deaths: "+data.competitive.global.deaths + "\n"+
+        "hero_damage_done: "+data.competitive.global.hero_damage_done + "\n"+
+        "time_spent_on_fire: "+data.competitive.global.time_spent_on_fire + "\n"+
+        "solo_kills: "+data.competitive.global.solo_kills + "\n"+
+        "objective_time: "+data.competitive.global.objective_time + "\n"+
+        "objective_kills: "+data.competitive.global.objective_kills + "\n"+
+        "final_blows: "+data.competitive.global.final_blows + "\n"+
+        "eliminations: "+data.competitive.global.eliminations + "\n"+
+        "all_damage_done: "+data.competitive.global.all_damage_done + "\n"+
+        "multikills: "+data.competitive.global.multikills + "\n"+
+        "healing_done: "+data.competitive.global.healing_done + "\n"+
+        "defensive_assists: "+data.competitive.global.defensive_assists + "\n"+
+        "eliminations_most_in_game: "+data.competitive.global.eliminations_most_in_game + "\n"+
+        "final_blows_most_in_game: "+data.competitive.global.final_blows_most_in_game + "\n"+
+        "all_damage_done_most_in_game: "+data.competitive.global.all_damage_done_most_in_game + "\n"+
+        "healing_done_most_in_game: "+data.competitive.global.healing_done_most_in_game+ "\n"+
+        "defensive_assists_most_in_game: "+data.competitive.global.defensive_assists_most_in_game + "\n"+
+        "objective_kills_most_in_game: "+data.competitive.global.objective_kills_most_in_game + "\n"+
+        "objective_time_most_in_game: "+data.competitive.global.objective_time_most_in_game + "\n"+
+        "multikill_best: "+data.competitive.global.multikill_best+ "\n"+
+        "solo_kills_most_in_game: "+data.competitive.global.solo_kills_most_in_game + "\n"+
+        "time_spent_on_fire_most_in_game: "+data.competitive.global.time_spent_on_fire_most_in_game + "\n"+
+        "melee_final_blows_most_in_game: "+data.competitive.global.melee_final_blows_most_in_game + "\n"},
+      {"name": "Competitive Stats (2)",
+        "value": 
+        "kill_streak_best: "+data.competitive.global.kill_streak_best + "\n"+
+        "hero_damage_done_most_in_game: "+data.competitive.global.hero_damage_done_most_in_game + "\n"+
+         " barrier_damage_done_most_in_game: "+data.competitive.global.barrier_damage_done_most_in_game + "\n"+
+        "barrier_damage_done_avg_per_10_min: "+data.competitive.global.barrier_damage_done_avg_per_10_min + "\n"+
+         "deaths_avg_per_10_min: "+data.competitive.global.deaths_avg_per_10_min + "\n"+
+        "hero_damage_done_avg_per_10_min: "+data.competitive.global.hero_damage_done_avg_per_10_min + "\n"+
+         "time_spent_on_fire_avg_per_10_min: "+data.competitive.global.time_spent_on_fire_avg_per_10_min + "\n"+
+        "solo_kills_avg_per_10_min: "+data.competitive.global.solo_kills_avg_per_10_min + "\n"+
+         "objective_time_avg_per_10_min: "+data.competitive.global.objective_time_avg_per_10_min + "\n"+
+        "objective_kills_avg_per_10_min: "+data.competitive.global.objective_kills_avg_per_10_min + "\n"+
+        "healing_done_avg_per_10_min: "+data.competitive.global.healing_done_avg_per_10_min + "\n"+
+        "final_blows_avg_per_10_min: "+data.competitive.global.final_blows_avg_per_10_min + "\n"+
+        "eliminations_avg_per_10_min: "+data.competitive.global.eliminations_avg_per_10_min + "\n"+
+        "card: "+data.competitive.global.card + "\n"+
+        "medals: "+data.competitive.global.medals + "\n"+
+        "medals_gold: "+data.competitive.global.medals_gold + "\n"+
+         "medals_silver: "+data.competitive.global.medals_silver + "\n"+
+        "medals_bronze: "+data.competitive.global.medals_bronze + "\n"+
+         "time_played: "+data.competitive.global.time_played + "\n"+
+        "games_played: "+data.competitive.global.games_played + "\n"+
+         "games_won: "+data.competitive.global.games_won + "\n"+
+        "games_lost: "+data.competitive.global.games_lost + "\n"+
+         "damage_done: "+data.competitive.global.damage_done + "\n"
+        
+     
+      }
+    ]
+  }
+});
+         
+        });      
+        
+break;
+        
+      case "ow":
+        var owUsername=args[1].replace('#','-');
+   
+        
+        
+        
+       
+        owjs.getOverall(args[3], args[2], owUsername).then(function(data){
+   
+          console.log(data);
+          message.channel.send({
+  "embed": {
+    "title": data.profile.nick,
+    "description": "Here is all your stats (Both QP and Comp):",
+    "url": data.profile.url,
+    "color": 13246671,
+    "thumbnail": {
+      "url": data.profile.avatar
+    },
+    
+    "author": {
+      "name": args[1],
+      "url": data.profile.url,
+      "icon_url": data.profile.avatar
+    },
+    "fields": [
+      {
+        "name": "Account Stats",
+        "value": "Level: "+data.profile.level + "\n"+"Rank: "+data.profile.rank + "\n" +"Ranking: "+data.profile.ranking,
+        "inline": true
+      },
+      {
+        "name": "Numbers",
+        "value": "Eliminations: "+(data.competitive.global.eliminations+data.quickplay.global.eliminations)+ "\n"+"Final Blows: "+(data.competitive.global.final_blows+data.quickplay.global.final_blows)+ "\n" +"Deaths: "+(data.competitive.global.deaths+data.quickplay.global.deaths)+"\n"+"Kill/Death Ratio: "+((data.competitive.global.final_blows+data.quickplay.global.final_blows)/(data.competitive.global.deaths+data.quickplay.global.deaths))+ "\n"+"Damage Done: "+(data.competitive.global.all_damage_done+data.quickplay.global.all_damage_done)+ "\n"+"Healing Done: "+(data.competitive.global.healing_done+data.quickplay.global.healing_done),
+        "inline": true
+      },
+      {
+        "name": "Medals",
+        "value": "Gold: "+(data.competitive.global.medals_gold+data.quickplay.global.medals_gold)+ "\n"+"Silver: "+(data.competitive.global.medals_silver+data.quickplay.global.medals_silver)+ "\n" +"Bronze: "+(data.competitive.global.medals_bronze+data.quickplay.global.medals_bronze),
+        "inline": true
+      }
+    ]
+  }
+});
+         
+        });      
+        
+break;
         case "img":
 
             message.channel.startTyping();
@@ -85,7 +356,7 @@ bot.on("message", function (message) {
                 message.channel.stopTyping();
                 return;
             }
-            const client = new GoogleImages("cseid", "youtubeapi keys");
+            const client = new GoogleImages(process.env.CSEID, process.env.youtubeapi);
             args.shift();
             var searchTerm = args.join(" ");
 
@@ -109,14 +380,7 @@ bot.on("message", function (message) {
 
                     message.channel.send("shit got fucked up (your search term was shit)");
                 });
-            //       const refresh = await message.channel.send("beep boop");
-            //       await refresh.react(`🔄`);
-            //       const filterref = (reaction) => reaction.emoji.name === '🔄';
-            //       const collectorref = refresh.createReactionCollector(filterref, {
-            //         time: 15000
-            //       });
-            //       collectorref.on('collect', r => console.log(`Collected ${r.emoji.name}`));
-            //collectorref.on('end', );
+         
             message.channel.stopTyping();
 break;
 
@@ -329,4 +593,4 @@ break;
 
 //bot.login('no');
 
-bot.login('');
+bot.login(process.env.TOKEN);
