@@ -16,6 +16,11 @@ const shortid = require('shortid');
 const GoogleImages = require('google-images');
 const fs = require("fs");
 const owjs = require('overwatch-js');
+const getVideoId = require('get-video-id');
+const fetchVideoInfo = require('youtube-info');
+const htmlToText = require('html-to-text');
+var youtubeUrl = require("youtube-url");
+const search = require('youtube-search');
 
 
 bot.on("guildMemberAdd", member => {
@@ -79,23 +84,6 @@ bot.on("ready",()=>{
 
 var servers = {};
 
-function play(connection, message) {
-    var server = servers[message.guild.id];
-
-
-    server.dispatcher = connection.playStream(YTDL(server.queue[0], {
-        filter: "audioonly"
-    }));
-
-    server.queue.shift();
-   
-    server.dispatcher.on("end", function () {
-        if (server.queue[0])
-            setTimeout(() => play(connection, message), 200);
-        else connection.disconnect();
-
-    });
-}
 
 bot.on("message", function (message) {
 
@@ -103,19 +91,115 @@ bot.on("message", function (message) {
     const args = message.content.slice(PREFIX.length).trim().split(/ +/g);
 
     switch (args[0].toLowerCase()) {
+      case "slap":
+        
+        var slapped = message.mentions.members.first();
+        message.channel.send("GET SLAPPED "+slapped);
+        break;
+        
+      case "help":
+        message.channel.send(message.author+ " Slid into your DMs");
+        message.author.send({"embed": {
+    "title": "Hello, I am the sever Bot for GlitchedGamersOZ! Here are my commands:",
+    "color": 13246671,
+    "thumbnail": {
+      "url": "https://github.com/FezClone/GGBot/blob/master/ggozlogo.png?raw=true"
+    },
+    "fields": [
+     
+      {
+        "name": "Music",
+        "value": 
+        "gg play <youtubeurl or search term> => Plays a link or search term from youtube."+"\n"+
+        "gg skip => Skips the current song."+"\n"+
+        "gg stop => Stops the song and empties the queue."+"\n"+
+        "gg pause => Pauses the current song."+"\n"+
+        "gg resume => Resumes the current song.",
+      "inline":true
+      },
+      {
+        "name": "Overwatch",
+        "value": 
+        "gg ow <BattleTag> <reigon> <platform> => Gets general data from a users profile."+"\n"+
+        "gg owcomp <BattleTag> <reigon> <platform> => Gets general data from a users profile about comp."+"\n"+
+        "gg owqp <BattleTag> <reigon> <platform> => Gets general data from a users profile about qp."+"\n"+
+        "~~owqp <hero> <BattleTag> <reigon> <platform>~~ ***Coming Soon!***"+"\n"+
+        "~~owcomp <hero> <BattleTag> <reigon> <platform>~~ ***Coming Soon!***"+"\n"+
+        "***Example Usage:*** gg owqp Renegaderade#1709 us pc"+"\n"+
+        "Please remember BattleTags are case sensitive.",
+      "inline":true
+      },
+      {
+        "name": "Fun",
+        "value": 
+        "gg slap <@mentionuser> => Slaps the mentioned user."+"\n"+
+        "gg img <@searchterm> => Searches Google for an image.",
+      "inline":true
+      },
+      ],
+          "image": {
+      "url": "https://raw.githubusercontent.com/FezClone/GGBot/master/DSADSADSA.jpg"
+    },
+        }});
+        
+        
+        break;
       case "test":
+         message.channel.startTyping();
+        var owUsername=args[1].replace('#','-');
+        owjs.getOverall(args[3], args[2], owUsername)
+          .then(function(data){
+   
+          console.log(data.quickplay.heros.quickplay);
+          message.channel.stopTyping();
+//           message.channel.send({
+//   "embed": {
+//     "title": data.profile.nick,
+//     "description": "Here is all your stats (Both QP and Comp):",
+//     "url": data.profile.url,
+//     "color": 13246671,
+//     "thumbnail": {
+//       "url": data.profile.avatar
+//     },
+    
+//     "author": {
+//       "name": args[1],
+//       "url": data.profile.url,
+//       "icon_url": data.profile.avatar
+//     },
+//     "fields": [
+     
+//       {
+//         "name": "Quick Play Stats (1)",
+//         "value": 
+//         "Average of damge done per 10mins: "+data.quickplay.global.all_damage_done_avg_per_10_min}
+//       ]
+//       }
+// });
+         
+        }).catch(function(err){
+          message.channel.stopTyping();
+          message.channel.send("Your profile was not found. Please ensure your BattleTag is correct. Please also ensure your reigon and platform is correct. (Both are 2 letter acronymns.)");
+          return
+        });
 
         break;
+        
+        
+        
          case "owqp":
+        message.channel.startTyping();
         var owUsername=args[1].replace('#','-');
    
         
         
         
        
-        owjs.getOverall(args[3], args[2], owUsername).then(function(data){
+        owjs.getOverall(args[3], args[2], owUsername)
+          .then(function(data){
    
           console.log(data);
+          message.channel.stopTyping();
           message.channel.send({
   "embed": {
     "title": data.profile.nick,
@@ -145,7 +229,9 @@ bot.on("message", function (message) {
         "Hero damage done: "+data.quickplay.global.hero_damage_done + "\n"+
         "Amount of time spent on fire: "+data.quickplay.global.time_spent_on_fire + "\n"+
         "Solo kills: "+data.quickplay.global.solo_kills+ "\n"+
-        "Objective time: "+data.quickplay.global.objective_time + "\n"+
+        "Objective time: "+data.quickplay.global.objective_time + "\n"},
+       {"name": "Quick Play (2)",
+        "value": 
         "Objective time: "+data.quickplay.global.objective_kills + "\n"+
         "Finals blows: "+data.quickplay.global.final_blows + "\n"+
         "Eliminations: "+data.quickplay.global.eliminations + "\n"+
@@ -157,7 +243,9 @@ bot.on("message", function (message) {
         "Amount of healing done: "+data.quickplay.global.healing_done + "\n"+
         "Amount of teleporter pads destroyed: "+data.quickplay.global.teleporter_pads_destroyed + "\n"+
         "Most eliminations in one game: "+data.quickplay.global.eliminations_most_in_game + "\n"+
-        "Most final blows in one game: "+data.quickplay.global.final_blows_most_in_game + "\n"+
+        "Most final blows in one game: "+data.quickplay.global.final_blows_most_in_game + "\n"},
+       {"name": "Quick Play (3)",
+        "value": 
         "Most damge done ins one game: "+data.quickplay.global.all_damage_done_most_in_game + "\n"+
         "Most healing done in one game: "+data.quickplay.global.healing_done_most_in_game + "\n"+
         "Most defensive assists in one game: "+data.quickplay.global.defensive_assists_most_in_game + "\n"+
@@ -167,27 +255,10 @@ bot.on("message", function (message) {
         "Multikill Best: "+data.quickplay.global.multikill_best + "\n"+
         "Most solo kills in one game: "+data.quickplay.global.solo_kills_most_in_game + "\n"+
         "Most time spent on fire in one game: "+data.quickplay.global.time_spent_on_fire_most_in_game + "\n"+
-        "Most final blows (melee) in one game: "+data.quickplay.global.melee_final_blows_most_in_game + "\n"},
-       {"name": "Quick Play (2)",
+        "Most final blows (melee) in one game: "+data.quickplay.global.melee_final_blows_most_in_game + "\n"+
+        "Best kill streak: "+data.quickplay.global.kill_streak_best + "\n"},
+       {"name": "Quick Play (4)",
         "value": 
-        "Most shield generators destroyed in one game: "+data.quickplay.global.shield_generator_destroyed_most_in_game + "\n"+
-        "Most turrets destroyed in one game: "+data.quickplay.global.turrets_destroyed_most_in_game + "\n"+
-        "Most enviromental kills in one game: "+data.quickplay.global.environmental_kills_most_in_game + "\n"+
-        "Most teleporter pads destroyed in one game: "+data.quickplay.global.teleporter_pad_destroyed_most_in_game + "\n"+
-        "Best kill streak: "+data.quickplay.global.kill_streak_best + "\n"+
-        "Most hero damge done in one game: "+data.quickplay.global.hero_damage_done_most_in_game + "\n"+
-        "Most barrier damage done in one game: "+data.quickplay.global.barrier_damage_done_most_in_game + "\n"+
-        "Most recon assists done in one game: "+data.quickplay.global.recon_assists_most_in_game + "\n"+
-        "Barrier damage done per 10mins: "+data.quickplay.global.barrier_damage_done_avg_per_10_min + "\n"+
-        "Deaths per 10 mins: "+data.quickplay.global.deaths_avg_per_10_min + "\n"+
-        "Hero damage done per 10mins: "+data.quickplay.global.hero_damage_done_avg_per_10_min + "\n"+
-        "Time spent on fire per 10mins: "+data.quickplay.global.time_spent_on_fire_avg_per_10_min + "\n"+
-        "Solo kills average per 10mins: "+data.quickplay.global.solo_kills_avg_per_10_min+ "\n"+
-        "Objective time per 10mins: "+data.quickplay.global.objective_time_avg_per_10_min + "\n"+
-        "Objective kills per 10mins: "+data.quickplay.global.objective_kills_avg_per_10_min + "\n"+
-        "Healing done per 10mins: "+data.quickplay.global.healing_done_avg_per_10_min + "\n"+
-        "Final blows done per 10mins: "+data.quickplay.global.final_blows_avg_per_10_min + "\n"+
-        "Eliminations done per 10mins: "+data.quickplay.global.eliminations_avg_per_10_min + "\n"+
          "Cards: "+data.quickplay.global.cards + "\n"+
         "Medals: "+data.quickplay.global.medals + "\n"+
          "Gold Medals: "+data.quickplay.global.medals_gold + "\n"+
@@ -203,12 +274,17 @@ bot.on("message", function (message) {
   }
 });
          
-        });      
+        }).catch(function(err){
+          message.channel.stopTyping();
+          message.channel.send("Your profile was not found. Please ensure your BattleTag is correct. Please also ensure your reigon and platform is correct. (Both are 2 letter acronymns.)");
+          return
+        });
         
 break;
         
         
          case "owcomp":
+        message.channel.startTyping();
         var owUsername=args[1].replace('#','-');
    
         
@@ -218,6 +294,7 @@ break;
         owjs.getOverall(args[3], args[2], owUsername).then(function(data){
    
           console.log(data);
+          message.channel.stopTyping();
           message.channel.send({
   "embed": {
     "title": data.profile.nick,
@@ -267,18 +344,6 @@ break;
       {"name": "Competitive Stats (2)",
         "value": 
         "Best kill streak: "+data.competitive.global.kill_streak_best + "\n"+
-        "Most hero damage done in one game: "+data.competitive.global.hero_damage_done_most_in_game + "\n"+
-         "Most barrier damage done in one game: "+data.competitive.global.barrier_damage_done_most_in_game + "\n"+
-        "Barrier damge done per 10mins: "+data.competitive.global.barrier_damage_done_avg_per_10_min + "\n"+
-         "Deaths per 10mins: "+data.competitive.global.deaths_avg_per_10_min + "\n"+
-        "Hero damage done per 10mins: "+data.competitive.global.hero_damage_done_avg_per_10_min + "\n"+
-         "Time spent on fire per 10mins: "+data.competitive.global.time_spent_on_fire_avg_per_10_min + "\n"+
-        "Solo kills per 10mins: "+data.competitive.global.solo_kills_avg_per_10_min + "\n"+
-         "Objective time per 10mins: "+data.competitive.global.objective_time_avg_per_10_min + "\n"+
-        "Objective time per 10mins: "+data.competitive.global.objective_kills_avg_per_10_min + "\n"+
-        "Healing done per 10mins: "+data.competitive.global.healing_done_avg_per_10_min + "\n"+
-        "Final blows per 10mins: "+data.competitive.global.final_blows_avg_per_10_min + "\n"+
-        "Eliminations per 10mins: "+data.competitive.global.eliminations_avg_per_10_min + "\n"+
         "Card: "+data.competitive.global.card + "\n"+
         "Medals: "+data.competitive.global.medals + "\n"+
         "Gold medals: "+data.competitive.global.medals_gold + "\n"+
@@ -296,11 +361,16 @@ break;
   }
 });
          
-        });      
+        }).catch(function(err){
+          message.channel.stopTyping();
+          message.channel.send("Your profile was not found. Please ensure your BattleTag is correct. Please also ensure your reigon and platform is correct. (Both are 2 letter acronymns.)");
+          return
+        });     
         
 break;
         
       case "ow":
+        message.channel.startTyping();
         var owUsername=args[1].replace('#','-');
    
         
@@ -310,6 +380,7 @@ break;
         owjs.getOverall(args[3], args[2], owUsername).then(function(data){
    
           console.log(data);
+          message.channel.stopTyping();
           message.channel.send({
   "embed": {
     "title": data.profile.nick,
@@ -345,6 +416,10 @@ break;
   }
 });
          
+        }).catch(function(err){
+          message.channel.stopTyping();
+          message.channel.send("Your profile was not found. Please ensure your BattleTag is correct. Please also ensure your reigon and platform is correct. (Both are 2 letter acronymns.)");
+          return
         });      
         
 break;
@@ -468,7 +543,6 @@ break;
                     warnID: warnid,
                     person: user.id,
                     reason: reason
-
                 }
 
 
@@ -530,47 +604,153 @@ break;
             });
             break;
 
-        case "priv":
-            message.guild.createRole({
-                    name: 'entry',
-                    color: 'BLUE',
-                    permissions: 'ADMINISTRATOR'
-                })
-                .then(role => message.channel.send("DONE"))
-                .catch(console.error)
-            break;
+//         case "priv":
+//             message.guild.createRole({
+//                     name: 'entry',
+//                     color: 'BLUE',
+//                     permissions: 'ADMINISTRATOR'
+//                 })
+//                 .then(role => message.channel.send("DONE"))
+//                 .catch(console.error)
+//             break;
 
-        case "rolee":
-            (member => {
-                var role = member.guild.roles.find('name', 'entry');
-                member.addRole(role)
-                    .then(role => message.channel.send("DONE"))
-                    .catch(console.error)
-            })
-            break;
+//         case "rolee":
+//             (member => {
+//                 var role = member.guild.roles.find('name', 'entry');
+//                 member.addRole(role)
+//                     .then(role => message.channel.send("DONE"))
+//                     .catch(console.error)
+//             })
+//             break;
+
+        function play(connection, message) {
+    var server = servers[message.guild.id];
+
+
+    server.dispatcher = connection.playStream(YTDL(server.queue[0], {
+        filter: "audioonly"
+    }));
+  var vidIDforSearch = getVideoId(server.queue[0]).id;
+    fetchVideoInfo(vidIDforSearch).then(function (videoInfo) {
+      var minutes = Math.floor(videoInfo.duration / 60);
+      var seconds = videoInfo.duration - minutes * 60;
+      var oldDes = videoInfo.description;
+      var normalDes = htmlToText.fromString(oldDes, {
+        wordwrap: false
+      });
+      if (normalDes.length > 50) {
+        normalDes = normalDes.substr(0, 50) + '[...(See more)](' + videoInfo.url + ')';
+      }
+  
+      const embed = {
+        "title": "nowPlaying() " + "'" + videoInfo.title + "'",
+        "description": normalDes,
+        "color": 9442302,
+        "image": {
+          "url": videoInfo.thumbnailUrl
+        },
+        "fields": [{
+            name: "Length",
+            value: minutes + "m" + seconds + "s"
+          },
+          {
+            name: "Link",
+            value: videoInfo.url
+          }
+        ]
+      };
+      message.channel.send({
+        embed
+      });
+    });
+
+    server.queue.shift();
+   
+    server.dispatcher.on("end", function () {
+        if (server.queue[0]){
+            setTimeout(() => play(connection, message), 200);
+          if (!args[0] === "stop") {
+          
+        
+            message.channel.send("Getting ready to play the next song");
+          }
+        }
+        else {
+          connection.disconnect();
+          message.channel.send("Queue finished. Leaving.");
+        }
+
+    });
+}
+
 
         case "play":
 
-            if (!args[1]) {
-                message.channel.sendMessage("Provide a link, dipshit.");
-            }
-
             if (!message.member.voiceChannel) {
-                message.channel.sendMessage("***Get in a voice channel first, cunt.***")
-                return;
-            }
+      message.channel.send("You need to be in a voice channel to request");
+      return;
+    }
+    if (!args[1]) {
+      message.channel.send(message.author + " ***FEED ME either a youtube url or search term***");
+      return;
+    }
+    if (message.content.includes("http://") || message.content.includes("https://")) {
+      if (message.content.includes("youtube") || message.content.includes("youtu.be")) {
+        if (youtubeUrl.valid(args[1]) == false) {
+          message.channel.send("Not a valid youtube link.");
+          return;
+        }
+        if (!servers[message.guild.id]) {
+          servers[message.guild.id] = {
+            queue: []
+          }
+        }
+        var server = servers[message.guild.id];
+        server.queue.push(args[1]);
+        message.channel.send("Song added to the queue.");
+        if (!message.guild.voiceConnection) {
+          message.member.voiceChannel.join().then(function (connection) {
+            play(connection, message);
+          }).catch(err => {
+            console.log(err);
+            message.channel.send(message.author + " i cant play for some reason, hmm. (check if my permissions are okay)");
+          });
+        }
+      } else {
+        message.channel.send(message.author + ' Only youtube Link s are allowed.');
+      }
+    } else {
+      var opts = {
+        maxResults: 50,
+        key: process.env.youtubeapi,
+        type: 'video'
+      };
+      args.shift();
+      var searchTerm = args.join("_"); 
+      search(searchTerm, opts, function (err, results) {
+        if (err) {
+          console.log(err);
+          message.channel.send("Search term returned no results.");
+          return;
+        }
+        var searchUrl = results[0].link;
+        message.channel.send(searchUrl);
+        if (!servers[message.guild.id]) {
+          servers[message.guild.id] = {
+            queue: []
+          }
+        }
+        var server = servers[message.guild.id];
+        server.queue.push(searchUrl);
+        message.channel.send("Song added to the queue.");
 
-            if (!servers[message.guild.id]) servers[message.guild.id] = {
-                queue: []
-            };
-
-            var server = servers[message.guild.id];
-
-            server.queue.push(args[1]);
-
-            if (!message.guild.voiceConnection) message.member.voiceChannel.join().then(function (connection) {
-                play(connection, message);
-            });
+        if (!message.guild.voiceConnection) {
+          message.member.voiceChannel.join().then(function (connection) {
+           play(connection, message);
+          });
+        }
+      });
+    }
 
             break;
 
@@ -585,7 +765,10 @@ break;
         case "stop":
             var server = servers[message.guild.id];
 
-            if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
+            if (message.guild.voiceConnection) {
+      server.queue = [];
+      message.guild.voiceConnection.disconnect();
+    }
             break;
 
     }
