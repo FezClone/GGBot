@@ -21,7 +21,128 @@ const fetchVideoInfo = require('youtube-info');
 const htmlToText = require('html-to-text');
 var youtubeUrl = require("youtube-url");
 const search = require('youtube-search');
+const talkedRecently = new Set();
 
+
+
+
+bot.on("guildMemberUpdate", (oldMember, newMember) =>{
+   let lev1 = newMember.guild.roles.find("name", "Level 1");
+    if (newMember.roles.has(lev1.id)) { 
+      var serverDataFile = './' + newMember.guild.id + '.json';
+          fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+       var found = false;
+ for (var i = 0; i < obj.serverData.level1Users.length; i++) {
+                    if (obj.serverData.level1Users[i].userId == newMember.id) {
+                   found = true;
+                      
+                      break;
+                    }
+                }
+             
+               
+
+                if (!found){
+                  for (var i = 0; i < obj.serverData.level1Users.length; i++) {
+                    if (obj.serverData.level1Users[i].userId == newMember.id) {
+                
+                      
+        obj.serverData.level1Users.push({"userId":newMember.user.id,"amountOfMessages":0});
+                      break;
+                    }
+                }
+                var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      console.log("An error has occurred");
+                        
+                      
+                    }
+                  
+                });
+                }
+  });
+      
+    }
+   if (!newMember.roles.has(lev1.id)) { 
+      var serverDataFile = './' + newMember.guild.id + '.json';
+          fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+       var found = false;
+ for (var i = 0; i < obj.serverData.level1Users.length; i++) {
+                    if (obj.serverData.level1Users[i].userId == newMember.id) {
+                   found = true;
+                      break;
+                    }
+                }
+             
+               
+
+                  if (found){
+                  for (var i = 0; i < obj.serverData.level1Users.length; i++) {
+                    if (obj.serverData.level1Users[i].userId == newMember.id) {
+                
+                           obj.serverData.level1Users.splice(i, 1);
+     
+                      break;
+                    }
+                }
+                var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      console.log("An error has occurred");
+                        
+                      
+                    }
+                  
+                });
+                }
+  });
+      
+    }
+ 
+  
+});
+
+bot.on("guildMemberRemove", member => {
+  let myRole = member.guild.roles.find("name", "Level 1");
+    if (member.roles.has(myRole.id)) {
+  var serverDataFile = './' + member.guild.id + '.json';
+          fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+       
+ for (var i = 0; i < obj.serverData.level1Users.length; i++) {
+                    if (obj.serverData.level1Users[i].userId == member.id) {
+                      obj.serverData.level1Users.splice(i, 1);
+                       break;
+                    }
+                }
+             
+               
+
+                //add some data
+                var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      console.log("An error has occurred");
+                        
+                      
+                    }
+                  
+                });
+  });
+    }
+});
 
 bot.on("guildMemberAdd", member => {
   
@@ -33,8 +154,30 @@ bot.on("guildMemberAdd", member => {
     var level1Role = member.guild.roles.find('name', 'Level 1');
   var djRole = member.guild.roles.find('name', 'DJ');
 
-    member.addRole(level1Role);
+  member.addRole(level1Role);
   member.addRole(djRole);
+     var serverDataFile = './' + member.guild.id + '.json';
+          fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+       
+        obj.serverData.level1Users.push({"userId":member.user.id,"amountOfMessages":0});
+             
+               
+
+                //add some data
+                var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      console.log("An error has occurred");
+                        
+                      
+                    }
+                  
+                });
+  });
   }
 if(member.user.bot){
   console.log('The Bot ' + member.user.username + ' has joined the server and been set to a Bot.');
@@ -49,7 +192,9 @@ bot.on("guildCreate", guild => {
 
     var json = {
         "serverData": {
-            "warns": []
+            "warns": [],
+          "grantableRoles":[],
+          "level1Users":[]
         }
     };
     json = JSON.stringify(json);
@@ -69,9 +214,18 @@ bot.on("guildDelete", guild => {
 });
 
 bot.on("ready",()=>{
-    bot.user.setActivity('GG help');
+  bot.user.setUsername("GGBot");
+    bot.user.setActivity('Please type "GG help". (It helps my confidence)');
 });
 
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
 
 
 //bot.on("message", (message) => { 
@@ -84,13 +238,547 @@ bot.on("ready",()=>{
 
 var servers = {};
 
+ 
+
+
 
 bot.on("message", function (message) {
+  if(message.author.bot){
+    return;
+  }
+  
+  //  if (message.member.id===process.env.myID){
+  //     var guild = bot.guilds.find("id",429534499760635934);
+  // console.log(guild);
+  // //   if(message.content.length>=10){
+  // //     var guild = bot.guilds.find("id", 429534499760635934);
+  // //   console.log(guild);
+  // //   }
+  // }
+  
+    let myRole = message.guild.roles.find("name", "Level 1");
+    if (message.member.roles.has(myRole.id)) {
+  
+   if (talkedRecently.has(message.author.id)) {
+    
+            return;
+     //the message for cool down would go here but thats not the purpose of the commmand
+    } else {
+    
 
-    if (message.content.indexOf(PREFIX) !== 0) return;
+         var serverDataFile = './' + message.guild.id + '.json';
+          fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+       
+        for (var i = 0; i < obj.serverData.level1Users.length; i++) {
+                    if (obj.serverData.level1Users[i].userId == message.member.id) {
+                        obj.serverData.level1Users[i].amountOfMessages++;
+                      console.log("completed message count");
+                      
+                      if (obj.serverData.level1Users[i].amountOfMessages>=200){
+                        
+                        message.member.removeRole(myRole.id);
+                         let lev2 = message.guild.roles.find("name", "Level 2");
+                        message.member.addRole(lev2.id);
+                          obj.serverData.level1Users.splice(i, 1);
+                        message.author.send("Congratulations on reaching the rank of Level 2. Enjoy!");
+                      }
+                        break;
+                 
+
+                    }
+                }
+
+               
+
+                //add some data
+                var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      message.channel.send("An error has occurred");
+                        
+                      
+                    }
+                  
+                });
+         });
+
+        // Adds the user to the set so that they can't talk for a minute
+        talkedRecently.add(message.author.id);
+        setTimeout(() => {
+          // Removes the user from the set after a minute
+          talkedRecently.delete(message.author.id);
+        }, 2500);
+  
+}
+    }
+  if (message.content.toLowerCase()=="owo"){
+    message.channel.send("***OWO  w h a t s  t h i s ?***");
+  }
+  
+    if (message.content.toLowerCase().indexOf(PREFIX) !== 0) return;
     const args = message.content.slice(PREFIX.length).trim().split(/ +/g);
+  
+  
 
     switch (args[0].toLowerCase()) {
+        
+      case "eval":
+        const clean = text => {
+      if (typeof (text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+      else return text;
+    }
+    if (message.author.id !== process.env.myID) {
+      message.channel.send(message.author + " you dont have permission to use this and no one ever will");
+      var badPerson = message.author;
+      bot.fetchUser(process.env.myID)
+        .then(user => {
+          user.send("Someone tried to use the eval command. They were warned " + badPerson + " in " + message.guild.name)
+        })
+      return;
+    }
+    message.author.send("eval command used by you");
+    try {
+      args.shift();
+      const code = args.join(" ");
+      let evaled = eval(code);
+      if (typeof evaled !== "string")
+        evaled = require("util").inspect(evaled);
+      message.channel.send(clean(evaled), {
+        code: "xl"
+      });
+    } catch (err) {
+      message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+    }
+        break;
+//       case "getcurrentlev20000101011101":
+//          if (!message.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+//                 message.channel.send("To quote Hamlet, Act III, Scene III, Line 87, 'No'.");
+//                 return;
+//             }
+//    message.channel.send("***THE BETA OF THE AUTOLEVELING SYSTEM HAS BEGAN***");
+//     var members = message.guild.members.map(member=> member.id);
+//       var level1members=[];
+//          let myRole = message.guild.roles.find("name", "Level 1");
+//       //  console.log(members);
+//       for (var i =0;i<members.length;i++){
+//         if(message.guild.members.find("id",members[i]).roles.has(myRole.id)){
+//           level1members.push(members[i]);
+         
+          
+//         }
+        
+//       }
+//          console.log(level1members);
+       
+         
+        
+//     var serverDataFile = './' + message.guild.id + '.json';
+        
+//           fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+//                 if (err) throw err;
+
+//                var obj = JSON.parse(data);
+  
+       
+      
+//         for (var i =0;i<level1members.length;i++){
+//            var level1data= {
+        
+//          amountOfMessages:0,
+//           userId:level1members[i]
+//        };
+//            obj.serverData.level1Users.push(level1data);
+//           //add some data
+//                 var json = JSON.stringify(obj);
+          
+//                 fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+//                     if (err){
+//                       throw err;
+//                       console.log("An error has occurred");
+                    
+//                     }
+//                   else{
+//                   console.log("yep done");
+//                   }
+                  
+//                 });
+      
+
+         
+
+ 
+          
+//         }
+//               });
+    
+        
+//         break;
+        
+      case "removegrantablerole":
+        var serverDataFile = './' + message.guild.id + '.json';
+    if (!message.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+                message.channel.send("To quote Hamlet, Act III, Scene III, Line 87, 'No'.");
+                return;
+            }
+      let removegrantrole = message.mentions.roles.first();
+      if (!removegrantrole) {
+        message.channel.send("Error has occurred. Please check my permissions.");
+          
+        return;
+      }
+      
+            var data = fs.readFileSync(serverDataFile, 'utf-8');
+         
+            data = JSON.parse(data);
+      
+      
+      if (data.serverData.grantableRoles.includes(removegrantrole.id)) {
+        message.channel.send("This role is already grantable, use " + PREFIX + "listgrantableroles to get a list of already grantable roles.");
+           
+        return;
+      }
+      
+      fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+        var removed = false;
+        for (var i = 0; i < obj.serverData.grantableRoles.length; i++) {
+                    if (obj.serverData.grantableRoles[i].id == removegrantrole.id) {
+
+                        obj.serverData.grantableRoles.splice(i, 1);
+                        removed=!removed;
+                        message.channel.send("Role removed from grantable roles.");
+                         
+
+                    }
+                }
+
+               
+
+                //add some data
+                var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      message.channel.send("An error has occurred");
+                        
+                      
+                    }
+                  
+                });
+if (!removed){
+          message.channel.send("Could not find role to remove");
+     
+  return;
+        }
+
+            });
+           
+      setTimeout(function(){
+        message.delete();
+      },500);
+        
+      
+     
+  break;
+      case "addrole":
+        var serverDataFile = './' + message.guild.id + '.json';
+        let roleToAdd = message.mentions.roles.first();
+    if (!roleToAdd) {
+      message.channel.send("Either that role doesn't exist or I am not allowed to touch it.");
+         
+      return;
+    }
+     var data = fs.readFileSync(serverDataFile, 'utf-8');
+         
+            data = JSON.parse(data);
+      
+      var found = false;
+for(var i = 0; i < data.serverData.grantableRoles.length; i++) {
+    if (data.serverData.grantableRoles[i].id == roleToAdd.id) {
+        found = true;
+        break;
+    }
+}
+
+      if (!found) {
+        message.channel.send("This role is not grantable, use " + PREFIX + "listgrantableroles to get a list of already grantable roles.");
+           setTimeout(function(){
+        message.delete();
+      },500);
+        
+        return;
+      }
+    if (message.member.roles.has(roleToAdd.id)) {
+      message.channel.send("You already have this role.");
+         setTimeout(function(){
+        message.delete();
+      },500);
+        
+      return;
+    } else {
+      message.member.addRole(roleToAdd.id)
+        .then(function () {
+          message.channel.send("Role added.");
+           setTimeout(function(){
+        message.delete();
+      },500);
+        
+          return;
+        })
+        .catch(function () {
+          var err = console.error;
+          message.channel.send("Error has occurred. Please check my permissions.");
+           setTimeout(function(){
+        message.delete();
+      },500);
+        
+          return;
+        });
+    }
+           
+      setTimeout(function(){
+        message.delete();
+      },500);
+        
+        break;
+        
+      case "deleterole":
+       var serverDataFile = './' + message.guild.id + '.json';
+    if (!message.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+                message.channel.send("To quote Hamlet, Act III, Scene III, Line 87, 'No'.");
+         
+                return;
+            }
+      if (!message.mentions.roles.first()) {
+        message.channel.send("Tag a role to delete.");
+        
+        return;
+      }
+      var roleToDelete = message.mentions.roles.first();
+      if (!roleToDelete) {
+        message.channel.send("Either that role doesn't exist or I am not allowed to touch it.");
+          
+        return;
+      }
+      
+          
+          fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+          var removed = false;
+        for (var i = 0; i < obj.serverData.grantableRoles.length; i++) {
+                    if (obj.serverData.grantableRoles[i].id == roleToDelete.id) {
+
+                        obj.serverData.grantableRoles.splice(i, 1);
+                        removed=!removed;
+                      
+
+
+                    }
+                }
+             var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      message.channel.send("An error has occurred");
+                        
+                      
+                    }
+                  
+                });
+          });
+
+          setTimeout(function () {
+            roleToDelete.delete();
+          }, 100);
+       
+          message.channel.send("The role has been deleted.");
+           
+      setTimeout(function(){
+        message.delete();
+      },500);
+       
+     
+        break;
+        
+        
+     
+        
+        
+      case "rolecolours":
+    message.channel.send("```" + ['DEFAULT', 'AQUA', 'GREEN', 'BLUE', 'PURPLE', 'GOLD', 'ORANGE', 'RED', 'GREY', 'DARKER_GREY', 'NAVY', 'DARK_AQUA', 'DARK_GREEN', 'DARK_BLUE', 'DARK_PURPLE', 'DARK_GOLD', 'DARK_ORANGE', 'DARK_RED', 'DARK_GREY', 'LIGHT_GREY', 'DARK_NAVY', 'RANDOM'].join("\n") + "```");
+  break;
+      case "createrole":
+        if (!message.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+                message.channel.send("To quote Hamlet, Act III, Scene III, Line 87, 'No'.");
+                return;
+            }
+      if (!message.guild.roles.map(g => g.name).includes(args[1])) {
+        if (args[2].startsWith("#") || (['DEFAULT', 'AQUA', 'GREEN', 'BLUE', 'PURPLE', 'GOLD', 'ORANGE', 'RED', 'GREY', 'DARKER_GREY', 'NAVY', 'DARK_AQUA', 'DARK_GREEN', 'DARK_BLUE', 'DARK_PURPLE', 'DARK_GOLD', 'DARK_ORANGE', 'DARK_RED', 'DARK_GREY', 'LIGHT_GREY', 'DARK_NAVY', 'RANDOM', ]).includes(args[2])) {
+          var roleName = args[1].replace("_"," ");
+          message.guild.createRole({
+              name: roleName,
+              color: args[2],
+              mentionable: true
+            })
+            .then(role => message.channel.send(`Created new role with name ${role.name} and color ${role.color}`))
+            .catch(console.error)
+
+        } else {
+          message.channel.send("whoa okay so um will colours can either be " + PREFIX + "rolecolours or hex values. https://www.hexcolortool.com/");
+        }
+      } else {
+        message.channel.send("This role already exists.");
+        
+      }
+    
+        break;
+      case "removerole":
+        let roleToRemove = message.mentions.roles.first();
+    if (!roleToRemove) {
+      message.channel.send("Either that role doesn't exist or I am not allowed to touch it.");
+     
+      return;
+    }
+    if (!message.member.roles.has(roleToRemove.id)) {
+      message.channel.send("You dont have this role.");
+      
+      return;
+    } 
+        var data = fs.readFileSync(serverDataFile, 'utf-8');
+         
+            data = JSON.parse(data);
+      
+      
+      if (!data.serverData.grantableRoles.includes(removegrantrole.id)) {
+        message.channel.send("Cannot remove a role if it is not a grantable role.");
+        
+        return;
+      }else {
+      message.member.removeRole(roleToRemove.id)
+        .then(function () {
+          message.channel.send("Role added.");
+        
+        
+          return;
+        })
+        .catch(function () {
+          var err = console.error;
+          message.channel.send("Error has occurred. Please check my permissions.");
+        
+          return;
+        });
+    }
+     
+        break;
+        
+        
+         //add role to the list of roles avalible
+  case"addgrantablerole":
+        var serverDataFile = './' + message.guild.id + '.json';
+    if (!message.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+                message.channel.send("To quote Hamlet, Act III, Scene III, Line 87, 'No'.");
+      setTimeout(function(){
+        message.delete();
+      },500);
+      
+                return;
+      
+            }
+      let addgrantrole = message.mentions.roles.first();
+      if (!addgrantrole) {
+        message.channel.send("Either that role is above me or it doesn't exist.");
+        setTimeout(function(){
+        message.delete();
+      },500);
+        
+        return;
+      }
+      
+            var data = fs.readFileSync(serverDataFile, 'utf-8');
+         
+            data = JSON.parse(data);
+      
+      
+           var found = false;
+for(var i = 0; i < data.serverData.grantableRoles.length; i++) {
+    if (data.serverData.grantableRoles[i].id == addgrantrole.id) {
+        found = true;
+        break;
+    }
+}
+
+      if (found) {
+        message.channel.send("This role is already grantable, use " + PREFIX + "listgrantableroles to get a list of already grantable roles.");
+        setTimeout(function(){
+        message.delete();
+      },500);
+        
+        return;
+      }
+      
+      fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+        
+        obj.serverData.grantableRoles.push(addgrantrole);
+
+               
+
+                //add some data
+                var json = JSON.stringify(obj);
+                fs.writeFile(serverDataFile, json, 'utf8', (err) => {
+                    if (err){
+                      throw err;
+                      message.channel.send("An error has occurred");
+                      setTimeout(function(){
+        message.delete();
+      },500);
+                      
+                    }
+                  message.channel.send("People can now add them selves to that role.");
+                    setTimeout(function(){
+        message.delete();
+      },500);
+      
+    
+                });
+
+
+            })
+        setTimeout(function(){
+        message.delete();
+      },500);
+      
+      
+    
+  break;
+
+        
+      case "listgrantableroles":
+        var serverDataFile = './' + message.guild.id + '.json';
+         fs.readFile(serverDataFile, 'utf-8', (err, data) => {
+                if (err) throw err;
+
+                var obj = JSON.parse(data);
+                if(obj.serverData.grantableRoles.length<=0){ 
+               
+      message.channel.send("There are no grantable roles for you to enjoy.");
+    } else {
+      message.channel.send("```yaml"+"\n"+obj.serverData.grantableRoles.map(e => e.name).join("\n")+"```");
+    }
+
+            });
+         break;
+   
       case "slap":
         
         var slapped = message.mentions.members.first();
@@ -150,7 +838,7 @@ bot.on("message", function (message) {
         owjs.getOverall(args[3], args[2], owUsername)
           .then(function(data){
    
-          console.log(data.quickplay.heros.quickplay);
+          console.log(data.quickplay.heroes);
           message.channel.stopTyping();
 //           message.channel.send({
 //   "embed": {
@@ -197,8 +885,12 @@ bot.on("message", function (message) {
        
         owjs.getOverall(args[3], args[2], owUsername)
           .then(function(data){
-   
-          console.log(data);
+
+          if (isNaN(data.profile.rank)){
+            message.channel.send("The search was returned empty. This could be because your profile is private.");
+            message.channel.stopTyping();
+            return;
+          }
           message.channel.stopTyping();
           message.channel.send({
   "embed": {
@@ -294,6 +986,11 @@ break;
         owjs.getOverall(args[3], args[2], owUsername).then(function(data){
    
           console.log(data);
+             if (isNaN(data.profile.rank)){
+            message.channel.send("The search was returned empty. This could be because your profile is private.");
+            message.channel.stopTyping();
+            return;
+          }
           message.channel.stopTyping();
           message.channel.send({
   "embed": {
@@ -379,7 +1076,12 @@ break;
        
         owjs.getOverall(args[3], args[2], owUsername).then(function(data){
    
-          console.log(data);
+          console.log(isNaN(data.profile.rank));
+            if (data.profile.rank==="NaN"){
+            message.channel.send("The search was returned empty. This could be because your profile is private.");
+            message.channel.stopTyping();
+            return;
+          }
           message.channel.stopTyping();
           message.channel.send({
   "embed": {
@@ -463,7 +1165,7 @@ break;
         case "revokewarn":
 
 
-            if (!message.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+            if (!message.member.roles.some(r => ["Administrator", "Moderator", "Owner"].includes(r.name))) {
                 message.channel.send("To quote Hamlet, Act III, Scene III, Line 87, 'No'.");
                 return;
             }
@@ -509,7 +1211,7 @@ break;
             break;
         case "warn":
 
-            if (!message.member.roles.some(r => ["Administrator", "Moderator"].includes(r.name))) {
+            if (!message.member.roles.some(r => ["Administrator", "Moderator","Owner"].includes(r.name))) {
                 message.channel.send("To quote Hamlet, Act III, Scene III, Line 87, 'No'.");
                 return;
             }
@@ -573,15 +1275,19 @@ break;
             if (amountOfWarns >= 6) {
                 user.ban(reason);
                 message.channel.send("User Banned");
+              message.guild.channels.find("name","warn-log").send("User Banned");
 
             } else if (amountOfWarns >= 5) {
                 message.channel.send(user + " One more warn and you are Banned");
+              message.guild.channels.find("name","warn-log").send(user + " One more warn and you are Banned");
 
             } else if (amountOfWarns >= 3) {
                 user.kick(reason);
                 message.channel.send("User Kicked");
+               message.guild.channels.find("name","warn-log").send("User Kicked");
             } else if (amountOfWarns >= 2) {
                 message.channel.send(user + " One more warn and you are kicked");
+              message.guild.channels.find("name","warn-log").send(user + " One more warn and you are kicked");
 
             }
 
@@ -602,6 +1308,7 @@ break;
             message.channel.send({
                 embed
             });
+        message.guild.channels.find("name","warn-log").send({embed});
             break;
 
 //         case "priv":
@@ -706,6 +1413,9 @@ break;
           }
         }
         var server = servers[message.guild.id];
+         var vidIDforSearch = getVideoId(args[1]).id;
+    fetchVideoInfo(vidIDforSearch).then(function (videoInfo) {
+    console.log(videoInfo);});
         server.queue.push(args[1]);
         message.channel.send("Song added to the queue.");
         if (!message.guild.voiceConnection) {
@@ -753,6 +1463,24 @@ break;
     }
 
             break;
+        
+         //pauses music
+      case "pause":
+    var server = servers[message.guild.id];
+    if (server.dispatcher) {
+      server.dispatcher.pause();
+      message.channel.send("Song paused.");
+    }
+  break;
+
+  //resumes music
+      case "resume":
+    var server = servers[message.guild.id];
+    if (server.dispatcher) {
+      server.dispatcher.resume();
+      message.channel.send("Song resumed.");
+    }
+  break;
 
         case "skip":
             var server = servers[message.guild.id];
