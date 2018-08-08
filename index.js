@@ -2,6 +2,17 @@
 const express = require("express")
 const expressApp = express()
 expressApp.get("/", (req, res) => res.json("OK FAM"))
+
+expressApp.get('/serverData', function(req, res) {
+    res.sendfile('./data.html');
+  
+});
+expressApp.get('/json', function(req, res) {
+  var serveriD = req.query;
+  console.log(serveriD.serverid);
+    res.sendfile('./'+serveriD.serverid+'.json');
+  
+});
 expressApp.listen(process.env.PORT)
 
 
@@ -48,7 +59,7 @@ bot.on("guildMemberUpdate", (oldMember, newMember) =>{
                 if (!found){
                   for (var i = 0; i < obj.serverData.level1Users.length; i++) {
                     if (obj.serverData.level1Users[i].userId == newMember.id) {
-                
+               
                       
         obj.serverData.level1Users.push({"userId":newMember.user.id,"amountOfMessages":0});
                       break;
@@ -162,7 +173,7 @@ bot.on("guildMemberAdd", member => {
 
                 var obj = JSON.parse(data);
        
-        obj.serverData.level1Users.push({"userId":member.user.id,"amountOfMessages":0});
+      obj.serverData.level1Users.push({"userId":member.user.id,"amountOfMessages":0});
              
                
 
@@ -216,6 +227,15 @@ bot.on("guildDelete", guild => {
 bot.on("ready",()=>{
   bot.user.setUsername("GGBot");
     bot.user.setActivity('Please type "GG help". (It helps my confidence)');
+  
+  expressApp.get('/test', function(req, res) {
+    res.sendfile('./test.html');
+  
+});
+expressApp.get('/test2', function(req, res) {
+    res.sendfile('./267891617128513537.json');
+  
+});
 });
 
 function isEmpty(obj) {
@@ -246,15 +266,11 @@ bot.on("message", function (message) {
   if(message.author.bot){
     return;
   }
+      var serverDataFile = './' + message.guild.id + '.json';
+
+  var commandAval = fs.readFileSync(serverDataFile);
   
-  //  if (message.member.id===process.env.myID){
-  //     var guild = bot.guilds.find("id",429534499760635934);
-  // console.log(guild);
-  // //   if(message.content.length>=10){
-  // //     var guild = bot.guilds.find("id", 429534499760635934);
-  // //   console.log(guild);
-  // //   }
-  // }
+  
   
     let myRole = message.guild.roles.find("name", "Level 1");
     if (message.member.roles.has(myRole.id)) {
@@ -325,7 +341,10 @@ bot.on("message", function (message) {
   
 
     switch (args[0].toLowerCase()) {
-        
+
+      case "ping":
+        message.channel.send("Please prohibit form being a wet blanket "+message.author);
+        break;
       case "eval":
         const clean = text => {
       if (typeof (text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
